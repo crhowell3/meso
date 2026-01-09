@@ -166,7 +166,18 @@ fn Outlook() -> Html {
 
     html! {
         <div>
-            <img src={image_url} alt="Day 1 Outlook" />
+            <img src={image_url} width="500" alt="Day 1 Outlook" />
+        </div>
+    }
+}
+
+#[component]
+fn Climate() -> Html {
+    let image_url = "https://www.cpc.ncep.noaa.gov/products/predictions/610day/610temp.new.gif";
+
+    html! {
+        <div>
+            <img src={image_url} width="500" alt="6-10 Climate Outlook" />
         </div>
     }
 }
@@ -335,6 +346,8 @@ pub fn App() -> Html {
                         <br/>
                         <Outlook />
                     </div>
+                    <h2>{"6-10 Day Climate Outlook"}</h2>
+                    <Climate />
                 </section>
             </main>
             <footer class="attribution">
