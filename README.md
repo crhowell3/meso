@@ -12,6 +12,33 @@
   />
 </h1>
 
+<p align="center">
+  <a href="https://github.com/crhowell3/meso/stargazers">
+    <img
+      alt="Stargazers"
+      src="https://img.shields.io/github/stars/crhowell3/meso?style=for-the-badge&logo=starship&color=b16286&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+  <a href="https://github.com/crhowell3/meso/issues">
+    <img
+      alt="Issues"
+      src="https://img.shields.io/github/issues/crhowell3/meso?style=for-the-badge&logo=gitbook&color=d79921&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+  <a href="https://github.com/crhowell3/meso/contributors">
+    <img
+      alt="Contributors"
+      src="https://img.shields.io/github/contributors/crhowell3/meso?style=for-the-badge&logo=opensourceinitiative&color=689d6a&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+  <a href="#">
+    <img
+      alt="Maintained"
+      src="https://img.shields.io/maintenance/yes/2026?style=for-the-badge&color=98971a&labelColor=282a36"
+    />
+  </a>
+</p>
+
 &nbsp;
 
 ## 💭 About
