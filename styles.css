@@ -111,34 +111,73 @@ button {
   }
 }
 
-.risk-thunder {
+/* SPC Categorical Risk Colors*/
+
+.categorical-risk-thunderstorms {
   background-color: #c0e8c0;
   color: #0f0f0f;
 }
 
-.risk-marginal {
+.categorical-risk-marginal {
   background-color: #7fc57f;
   color: #0f0f0f;
 }
 
-.risk-slight {
+.categorical-risk-slight {
   background-color: #f6f67f;
   color: #0f0f0f;
 }
 
-.risk-enhanced {
+.categorical-risk-enhanced {
   background-color: #e6c27f;
   color: #0f0f0f;
 }
 
-.risk-moderate {
+.categorical-risk-moderate {
   background-color: #e67f7f;
   color: #0f0f0f;
 }
 
-.risk-high {
+.categorical-risk-high {
   background-color: #ff7fff;
   color: #0f0f0f;
+}
+
+/* SPC Tornado Probability Colors*/
+
+.tornado-2 {
+  background-color: #008B00;
+  color: #efefef;
+}
+
+.tornado-5 {
+  background-color: #8B4726;
+  color: #efefef;
+}
+
+.tornado-10 {
+  background-color: #FFC800;
+  color: #0f0f0f;
+}
+
+.tornado-15 {
+  background-color: #FF0000;
+  color: #efefef;
+}
+
+.tornado-30 {
+  background-color: #FF00FF;
+  color: #efefef;
+}
+
+.tornado-45 {
+  background-color: #912CEE;
+  color: #efefef;
+}
+
+.tornado-60 {
+  background-color: #104E8B;
+  color: #efefef;
 }
 
 .attribution {
