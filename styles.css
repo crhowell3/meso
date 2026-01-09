@@ -1,14 +1,23 @@
-.logo.yew:hover {
-  filter: drop-shadow(0 0 2em #20a88a);
-}
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 
-  color: #f6f6f6;
-  background-color: #0f0f0f;
+  color: #ebdbb2;                 /* fg */
+  background-color: #282828;      /* bg */
+
+  --bg: #282828;                  /* dark0 */
+  --panel: #32302f;               /* dark1 */
+  --border: #3c3836;              /* dark2 */
+
+  --text: #ebdbb2;                /* light1 */
+  --muted: #a89984;               /* light4 */
+
+  --accent: #83a598;              /* blue */
+  --warning: #fabd2f;             /* yellow */
+  --error: #fb4934;               /* red */
+  --success: #b8bb26;             /* green */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -31,10 +40,6 @@
   padding: 1.5em;
   will-change: filter;
   transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
 }
 
 .row {
@@ -87,8 +92,75 @@ button {
   outline: none;
 }
 
-#greet-input {
-  margin-right: 5px;
+body {
+margin: 0;
+font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+background: var(--bg);
+color: var(--text);
+height: 100vh;
+display: grid;
+grid-template-rows: auto 1fr auto;
+}
+
+header, footer {
+padding: 0.75rem 1.25rem;
+background: var(--panel);
+border-bottom: 1px solid var(--border);
+}
+
+footer {
+border-top: 1px solid var(--border);
+border-bottom: none;
+font-size: 0.85rem;
+color: var(--muted);
+}
+
+main {
+padding: 1rem;
+display: grid;
+grid-template-columns: 1.2fr 1fr 1fr;
+grid-template-rows: auto 1fr;
+gap: 1rem;
+}
+
+.panel {
+background: var(--panel);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 1rem;
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+
+.panel h2 {
+font-size: 1rem;
+margin: 0;
+font-weight: 600;
+color: var(--accent);
+}
+
+.status-grid {
+display: block;
+gap: 0.75rem;
+}
+
+.status-item {
+background: #282828;
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 0.5rem 0.75rem;
+}
+
+.status-item span.label {
+display: block;
+font-size: 0.75rem;
+color: var(--muted);
+}
+
+.status-item span.value {
+font-size: 0.95rem;
+font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
