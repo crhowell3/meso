@@ -11,16 +11,51 @@ extern "C" {
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
-const SPC_DAY1_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/1/query";
-const SPC_DAY1_TOR_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/3/query";
-const SPC_DAY1_WIND_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/7/query";
-const SPC_DAY1_HAIL_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/5/query";
+const ARCGIS_BASE_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/";
 
-const SPC_DAY2_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/9/query";
-const SPC_DAY2_TOR_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/11/query";
+// These will be removed in the future in favor of configurability
+// Currently hardcoded to Huntsville, AL
+const LATITUDE: f64 = 34.7382;
+const LONGITUDE: f64 = -86.6018;
 
-const SPC_DAY3_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/17/query";
+#[derive(Debug, PartialEq, Copy, Clone)]
+enum MapServer {
+    Day1Outlook = 1,
+    Day1Tornado = 3,
+    Day1Hail = 5,
+    Day1Wind = 7,
+}
 
+impl MapServer {
+    fn get_common_name(&self) -> String {
+        match self {
+            Self::Day1Outlook => "categorical".to_string(),
+            Self::Day1Tornado => "tornado".to_string(),
+            Self::Day1Hail => "hail".to_string(),
+            Self::Day1Wind => "wind".to_string(),
+        }
+    }
+
+    fn get_dn(&self) -> i32 {
+        match self {
+            Self::Day1Outlook => 1,
+            Self::Day1Tornado => 3,
+            Self::Day1Hail => 5,
+            Self::Day1Wind => 7,
+        }
+    }
+}
+
+impl fmt::Display for MapServer {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+#[derive(Properties, PartialEq)]
+struct MapServerProps {
+    map_server: MapServer,
+}
 
 #[derive(Debug, Deserialize)]
 struct ArcGisResponse {
@@ -36,47 +71,11 @@ struct Feature {
 struct Attributes {
     #[serde(rename = "dn")]
     dn: i32,
-    #[serde(rename = "label2")]
-    label2: String,
-    #[serde(rename = "issue")]
-    issue: Option<String>,
 }
 
-#[derive(Debug)]
-enum RiskCategory {
-    Thunderstorms,
-    Marginal,
-    Slight,
-    Enhanced,
-    Moderate,
-    High,
-}
-
-impl RiskCategory {
-    fn from_dn(dn: i32) -> Option<Self> {
-        match dn {
-            2 => Some(Self::Thunderstorms),
-            3 => Some(Self::Marginal),
-            4 => Some(Self::Slight),
-            5 => Some(Self::Enhanced),
-            6 => Some(Self::Moderate),
-            7 => Some(Self::High),
-            _ => None,
-        }
-    }
-}
-
-impl fmt::Display for RiskCategory {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-async fn fetch_tor_risk() -> Result<i32, String> {
-    let latitude = 34.7382;
-    let longitude = -86.6018;
-
-    let url = format!("{SPC_DAY1_TOR_URL}?f=json&geometry={longitude},{latitude}&geometryType=esriGeometryPoint\
+async fn fetch_risk(map_server: MapServer) -> Result<i32, String> {
+    let dn = map_server.get_dn();
+    let url = format!("{ARCGIS_BASE_URL}/{dn}/query?f=json&geometry={LONGITUDE},{LATITUDE}&geometryType=esriGeometryPoint\
          &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*");
 
     let response: ArcGisResponse = Request::get(&url)
@@ -91,82 +90,16 @@ async fn fetch_tor_risk() -> Result<i32, String> {
         Ok(feature.attributes.dn)
     } else {
         Ok(0)
-    }
-}
-
-async fn fetch_wind_risk() -> Result<i32, String> {
-    let latitude = 34.7382;
-    let longitude = -86.6018;
-
-    let url = format!("{SPC_DAY1_WIND_URL}?f=json&geometry={longitude},{latitude}&geometryType=esriGeometryPoint\
-         &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*");
-
-    let response: ArcGisResponse = Request::get(&url)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?
-        .json()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    if let Some(feature) = response.features.first() {
-        Ok(feature.attributes.dn)
-    } else {
-        Ok(0)
-    }
-}
-
-async fn fetch_hail_risk() -> Result<i32, String> {
-    let latitude = 34.7382;
-    let longitude = -86.6018;
-
-    let url = format!("{SPC_DAY1_HAIL_URL}?f=json&geometry={longitude},{latitude}&geometryType=esriGeometryPoint\
-         &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*");
-
-    let response: ArcGisResponse = Request::get(&url)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?
-        .json()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    if let Some(feature) = response.features.first() {
-        Ok(feature.attributes.dn)
-    } else {
-        Ok(0)
-    }
-}
-
-async fn fetch_cat_risk() -> Result<Option<RiskCategory>, String> {
-    let latitude = 34.7382;
-    let longitude = -86.6018;
-
-    let url = format!("{SPC_DAY1_URL}?f=json&geometry={longitude},{latitude}&geometryType=esriGeometryPoint\
-         &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*");
-
-    let response: ArcGisResponse = Request::get(&url)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?
-        .json()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    if let Some(feature) = response.features.first() {
-        Ok(RiskCategory::from_dn(feature.attributes.dn))
-    } else {
-        Ok(None)
     }
 }
 
 #[component]
 fn Outlook() -> Html {
-    let image_url = "https://www.spc.noaa.gov/products/outlook/day1otlk.gif";
+    let state = use_context::<UseStateHandle<AppState>>().expect("AppState context not found");
 
     html! {
         <div>
-            <img src={image_url} width="500" alt="Day 1 Outlook" />
+            <img src={state.outlook_url.clone()} width="500" alt="Day 1 Outlook" />
         </div>
     }
 }
@@ -183,15 +116,16 @@ fn Climate() -> Html {
 }
 
 #[component]
-fn CategoricalRisk() -> Html {
-    let risk = use_state(|| None::<RiskCategory>);
+fn GetRisk(MapServerProps { map_server }: &MapServerProps) -> Html {
+    let risk = use_state(|| None::<i32>);
+    let ms = map_server.clone();
     {
         let risk = risk.clone();
         use_effect_with((), move |_| {
             wasm_bindgen_futures::spawn_local(async move {
-                let result = fetch_cat_risk().await;
+                let result = fetch_risk(ms).await;
                 if let Ok(r) = result {
-                    risk.set(r);
+                    risk.set(Some(r));
                 }
             });
             || ()
@@ -203,9 +137,19 @@ fn CategoricalRisk() -> Html {
             {
                 match &*risk {
                     Some(r) => {
-                        let caps = r.to_string().to_uppercase();
-                        let color = format!("categorical-risk-{}", r.to_string().to_lowercase());
-                        html! { <p1 class={color}>{format!("{caps}")}</p1> }
+                        let risk_name = map_server.get_common_name();
+                        let color = format!("{risk_name}-{}", r.to_string().to_lowercase());
+
+                        if risk_name == "categorical" {
+                            if *r == 0 {
+                                html! { <p1 class={color}>{"NONE"}</p1> }
+                            } else {
+                                let caps = r.to_string().to_uppercase();
+                                html! { <p1 class={color}>{format!("{caps}")}</p1> }
+                            }
+                        } else {
+                            html! { <p1 class={color}>{format!("{r}%")}</p1> }
+                        }
                     },
                     None => html! { "None" },
                 }
@@ -214,145 +158,91 @@ fn CategoricalRisk() -> Html {
     }
 }
 
-#[component]
-fn TornadoRisk() -> Html {
-    let percentage = use_state(|| None::<i32>);
-    {
-        let percentage = percentage.clone();
-        use_effect_with((), move |_| {
-            wasm_bindgen_futures::spawn_local(async move {
-                let result = fetch_tor_risk().await;
-                if let Ok(p) = result {
-                    percentage.set(Some(p));
-                }
-            });
-            || ()
-        });
-    }
+#[derive(Clone, PartialEq)]
+pub struct AppState {
+    pub outlook_url: String,
+}
 
-    html! {
-        <div>
-            {
-                match &*percentage {
-                    Some(p) => {
-                        let color = format!("tornado-{p}");
-                        html! { <p1 class={color}>{format!("{p}%")}</p1> }
-                    },
-                    None => html! { "None" },
-                }
-            }
-        </div>
+impl AppState {
+    pub fn new() -> Self {
+        let outlook_url = "https://www.spc.noaa.gov/products/outlook/day1otlk.gif";
+        Self {
+            outlook_url: outlook_url.to_string(),
+        }
     }
 }
 
 #[component]
-fn WindRisk() -> Html {
-    let percentage = use_state(|| None::<i32>);
-    {
-        let percentage = percentage.clone();
-        use_effect_with((), move |_| {
-            wasm_bindgen_futures::spawn_local(async move {
-                let result = fetch_wind_risk().await;
-                if let Ok(p) = result {
-                    percentage.set(Some(p));
-                }
+pub fn OutlookButtons() -> Html {
+    let state = use_context::<UseStateHandle<AppState>>().expect("AppsState not found");
+    let change_outlook = |src: &'static str| {
+        let state = state.clone();
+        Callback::from(move |_| {
+            state.set(AppState {
+                outlook_url: src.to_string(),
             });
-            || ()
-        });
-    }
+        })
+    };
 
     html! {
-        <div>
-            {
-                match &*percentage {
-                    Some(p) => {
-                        let color = format!("tornado-{p}");
-                        html! { <p1 class={color}>{format!("{p}%")}</p1> }
-                    },
-                    None => html! { "None" },
-                }
-            }
-        </div>
-    }
-}
-
-#[component]
-fn HailRisk() -> Html {
-    let percentage = use_state(|| None::<i32>);
-    {
-        let percentage = percentage.clone();
-        use_effect_with((), move |_| {
-            wasm_bindgen_futures::spawn_local(async move {
-                let result = fetch_hail_risk().await;
-                if let Ok(p) = result {
-                    percentage.set(Some(p));
-                }
-            });
-            || ()
-        });
-    }
-
-    html! {
-        <div>
-            {
-                match &*percentage {
-                    Some(p) => {
-                        let color = format!("tornado-{p}");
-                        html! { <p1 class={color}>{format!("{p}%")}</p1> }
-                    },
-                    None => html! { "None" },
-                }
-            }
-        </div>
+        <>
+            <button style="margin-right: 16px; width: 150px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1otlk.gif")}>{"Categorical"}</button>
+            <button style="margin-right: 16px; width: 150px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_torn.gif")}>{"Tornado"}</button>
+            <button style="margin-right: 16px; width: 150px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_wind.gif")}>{"Wind"}</button>
+            <button style="width: 150px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_hail.gif")}>{"Hail"}</button>
+        </>
     }
 }
 
 #[component]
 pub fn App() -> Html {
+    let app_state = use_state(AppState::new);
+
     html! {
-        <body>
-            <header>
-                <strong>{"Meso"}</strong>
-                {" | Weather Dashboard"}
-            </header>
-            <main class="container">
-                <section class="panel">
-                    <h2>{"Day 1 Categorical Outlook"}</h2>
-                    <CategoricalRisk />
-                    <h2>{"Risks by Type"}</h2>
-                    <div class="status-grid">
-                        <div class="status-item">
-                            <span class="label">{"Tornado"}</span>
-                            <span class="value"><TornadoRisk /></span>
+        <ContextProvider<UseStateHandle<AppState>> context={app_state}>
+            <body>
+                <header>
+                    <strong>{"Meso"}</strong>
+                    {" | Weather Dashboard"}
+                </header>
+                <main class="container">
+                    <section class="panel">
+                        <h2>{"Day 1 Categorical Outlook"}</h2>
+                        <GetRisk map_server={MapServer::Day1Outlook} />
+                        <h2>{"Risks by Type"}</h2>
+                        <div class="status-grid">
+                            <div style="display: flex; flex-direction: row;">
+                                <div class="status-item" style="width: 150px;">
+                                    <span class="label">{"Tornado"}</span>
+                                    <span class="value"><GetRisk map_server={MapServer::Day1Tornado} /></span>
+                                </div>
+                                <div class="status-item" style="width: 150px;">
+                                    <span class="label">{"Wind"}</span>
+                                    <span class="value"><GetRisk map_server={MapServer::Day1Wind} /></span>
+                                </div>
+                                <div class="status-item" style="width: 150px;">
+                                    <span class="label">{"Hail"}</span>
+                                    <span class="value"><GetRisk map_server={MapServer::Day1Hail} /></span>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+                    <section class="panel">
+                        <h2>{"SPC Outlook Map"}</h2>
                         <div class="status-item">
-                            <span class="label">{"Wind"}</span>
-                            <span class="value"><WindRisk /></span>
+                            <OutlookButtons />
+                            <br/>
+                            <br/>
+                            <Outlook />
                         </div>
-                        <div class="status-item">
-                            <span class="label">{"Hail"}</span>
-                            <span class="value"><HailRisk /></span>
-                        </div>
-                    </div>
-                </section>
-                <section class="panel">
-                    <h2>{"SPC Outlook Map"}</h2>
-                    <div class="status-item">
-                        <button>{"Categorical"}</button>
-                        <button>{"Tornado"}</button>
-                        <button>{"Wind"}</button>
-                        <button>{"Hail"}</button>
-                        <br/>
-                        <br/>
-                        <Outlook />
-                    </div>
-                    <h2>{"6-10 Day Climate Outlook"}</h2>
-                    <Climate />
-                </section>
-            </main>
-            <footer class="attribution">
-                {"created by crhowell3 | v0.1.0"}
-            </footer>
-        </body>
+                        <h2>{"6-10 Day Climate Outlook"}</h2>
+                        <Climate />
+                    </section>
+                </main>
+                <footer class="attribution">
+                    {"created by crhowell3 | v0.1.0"}
+                </footer>
+            </body>
+        </ContextProvider<UseStateHandle<AppState>>>
     }
 }

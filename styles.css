@@ -185,32 +185,32 @@ font-weight: 600;
 
 /* SPC Categorical Risk Colors*/
 
-.categorical-risk-thunderstorms {
+.categorical-thunderstorms {
   background-color: #c0e8c0;
   color: #0f0f0f;
 }
 
-.categorical-risk-marginal {
+.categorical-marginal {
   background-color: #7fc57f;
   color: #0f0f0f;
 }
 
-.categorical-risk-slight {
+.categorical-slight {
   background-color: #f6f67f;
   color: #0f0f0f;
 }
 
-.categorical-risk-enhanced {
+.categorical-enhanced {
   background-color: #e6c27f;
   color: #0f0f0f;
 }
 
-.categorical-risk-moderate {
+.categorical-moderate {
   background-color: #e67f7f;
   color: #0f0f0f;
 }
 
-.categorical-risk-high {
+.categorical-high {
   background-color: #ff7fff;
   color: #0f0f0f;
 }
@@ -251,6 +251,62 @@ font-weight: 600;
   background-color: #104E8B;
   color: #efefef;
 }
+
+/* SPC Wind Probability Colors*/
+
+.wind-5 {
+  background-color: #8B4726;
+  color: #efefef;
+}
+
+.wind-15 {
+  background-color: #FFC800;
+  color: #efefef;
+}
+
+.wind-30 {
+  background-color: #FF0000;
+  color: #efefef;
+}
+
+.wind-45 {
+  background-color: #FF00FF;
+  color: #efefef;
+}
+
+.wind-60 {
+  background-color: #912CEE;
+  color: #efefef;
+}
+
+/* SPC Hail Probability Colors*/
+
+.hail-5 {
+  background-color: #8B4726;
+  color: #efefef;
+}
+
+.hail-15 {
+  background-color: #FFC800;
+  color: #efefef;
+}
+
+.hail-30 {
+  background-color: #FF0000;
+  color: #efefef;
+}
+
+.hail-45 {
+  background-color: #FF00FF;
+  color: #efefef;
+}
+
+.hail-60 {
+  background-color: #912CEE;
+  color: #efefef;
+}
+
+/* Miscellaneous */
 
 .attribution {
   font-size: 8px;
