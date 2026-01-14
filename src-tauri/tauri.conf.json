@@ -16,7 +16,7 @@
         "title": "meso",
         "width": 800,
         "height": 600,
-        "devtools": false
+        "devtools": true
       }
     ],
     "security": {

@@ -65,26 +65,26 @@ input,
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.2em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
+  color: var(--accent);
+  background-color: transparent;
   transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 button {
   cursor: pointer;
+  font-size: 12px;
 }
 
 button:hover {
-  border-color: #396cd8;
+  border-color: #83a598;
 }
 button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
+  border-color: #83a598;
+  background-color: #ebdbb2;
 }
 
 input,
@@ -143,6 +143,13 @@ color: var(--accent);
 .status-grid {
 display: block;
 gap: 0.75rem;
+}
+
+.status-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
 }
 
 .status-item {
