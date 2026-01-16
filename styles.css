@@ -192,6 +192,11 @@ font-weight: 600;
 
 /* SPC Categorical Risk Colors*/
 
+.categorical-none {
+  background-color: #AFDDF6;
+  color: #0f0f0f;
+}
+
 .categorical-thunderstorms {
   background-color: #c0e8c0;
   color: #0f0f0f;

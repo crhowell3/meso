@@ -1,8 +1,5 @@
-use regex::Regex;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::spawn_local;
-use web_sys::console::debug;
 use yew::prelude::*;
 use gloo_net::http::Request;
 use std::fmt;
@@ -95,34 +92,6 @@ async fn fetch_risk(map_server: MapServer) -> Result<i32, String> {
     }
 }
 
-fn parse_temps(lines: &[&str]) -> Option<(i32, i32)> {
-    let mut high = None;
-    let mut low = None;
-
-    for line in lines {
-        let parts: Vec<&str> = line.trim().split_whitespace().collect();
-        web_sys::console::log_1(&JsValue::from_str(&format!("{:?}", parts).to_string()));
-        if parts.first() == Some(&"TXN") {
-            low = parts.get(1)?.parse::<i32>().ok();
-            high = parts.get(2)?.parse::<i32>().ok();
-        }
-    }
-
-    match (high, low) {
-        (Some(h), Some(l)) => Some((h, l)),
-        _ => None,
-    }
-}
-
-async fn fetch_daycast() -> Result<(i32, i32), String> {
-    let url = "https://blend.mdl.nws.noaa.gov/nbm-text-new?ele=NBS&sta=KHSV&cyc=Latest";
-    let response = Request::get(&url).send().await.map_err(|e| e.to_string())?.text().await.map_err(|e| e.to_string())?;
-    let lines: Vec<_> = response.lines().collect();
-    let (hi, lo) = parse_temps(&lines).ok_or_else(|| "Temps not found")?;
-
-    Ok((hi, lo))
-}
-
 #[component]
 fn Outlook() -> Html {
     let state = use_context::<UseStateHandle<AppState>>().expect("AppState context not found");
@@ -172,7 +141,7 @@ fn GetRisk(MapServerProps { map_server }: &MapServerProps) -> Html {
 
                         if risk_name == "categorical" {
                             if *r == 0 {
-                                html! { <p1 class={color}>{"NONE"}</p1> }
+                                html! { <p1 class={"categorical-none"}>{"NO THUNDER"}</p1> }
                             } else {
                                 let caps = r.to_string().to_uppercase();
                                 html! { <p1 class={color}>{format!("{caps}")}</p1> }
@@ -182,51 +151,6 @@ fn GetRisk(MapServerProps { map_server }: &MapServerProps) -> Html {
                         }
                     },
                     None => html! { "None" },
-                }
-            }
-        </div>
-    }
-}
-
-#[component]
-fn GetTemp() -> Html {
-    let temps = use_state(|| (None::<i32>, None::<i32>));
-
-    {
-        let temps = temps.clone();
-        use_effect_with((), move |_| {
-            wasm_bindgen_futures::spawn_local(async move {
-                let result = fetch_daycast().await;
-                if let Ok(r) = result {
-                    temps.set((Some(r.0), Some(r.1)));
-                } else {
-                    web_sys::console::log_1(&JsValue::from_str(&format!("{:?}", result).to_string()));
-                }
-            });
-            || ()
-        });
-    }
-
-    html! {
-        <div>
-            {
-                match &*temps {
-                    (Some(h), Some(l)) => {
-                        html! {
-                            <>
-                                <p style="font-size: 16pt;">{format!("{h}°F")}</p>
-                                <p>{format!("{l}°F")}</p>
-                            </>
-                        }
-                    }
-                    _ => {
-                        html! {
-                            <>
-                                <p style="font-size: 16pt;">{"-"}</p>
-                                <p>{"-"}</p>
-                            </>
-                        }
-                    }
                 }
             }
         </div>
@@ -273,20 +197,23 @@ pub fn OutlookButtons() -> Html {
 pub fn App() -> Html {
     let app_state = use_state(AppState::new);
 
+    let reload = Callback::from(move |_| {
+        if let Some(window) = web_sys::window() {
+            let _ = window.location().reload();
+        }
+    });
+
     html! {
         <ContextProvider<UseStateHandle<AppState>> context={app_state}>
             <body>
                 <header>
-                    <strong>{"Meso"}</strong>
-                    {" | Weather Dashboard"}
+                    <strong>{"meso"}</strong>
+                    {" | severe wx dashboard"}
+                    <button onclick={reload}>{"Refresh"}</button>
                 </header>
                 <main class="container" style="align-items: center;">
                     <div class="status-row">
-                        <section class="panel">
-                            <h2>{"Daycast"}</h2>
-                            <GetTemp />
-                        </section>
-                        <section class="panel">
+                        <section class="panel" style="width: 675px;">
                             <h2>{"Day 1 Categorical Outlook"}</h2>
                             <GetRisk map_server={MapServer::Day1Outlook} />
                             <h2>{"Risks by Type"}</h2>

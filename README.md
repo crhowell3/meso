@@ -45,6 +45,10 @@
 
 A graphical desktop weather dashboard for viewing NWS/SPC products for a given location.
 
+## Attribution
+
+The logo for this application was created by [Edi Prast on Flaticons](https://www.flaticon.com/free-icons/weather-app).
+
 <p align="center">
   Copyright &copy; 2026
   <a href="https://github.com/crhowell3" target="_blank">Cameron Howell</a>
