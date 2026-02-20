@@ -1,8 +1,8 @@
-use serde::{Deserialize};
+use gloo_net::http::Request;
+use serde::Deserialize;
+use std::fmt;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
-use gloo_net::http::Request;
-use std::fmt;
 
 #[wasm_bindgen]
 extern "C" {
@@ -10,7 +10,8 @@ extern "C" {
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
-const ARCGIS_BASE_URL: &str = "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/";
+const ARCGIS_BASE_URL: &str =
+    "https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/";
 
 // These will be removed in the future in favor of configurability
 // Currently hardcoded to Huntsville, AL
@@ -23,6 +24,44 @@ enum MapServer {
     Day1Tornado = 3,
     Day1Hail = 5,
     Day1Wind = 7,
+}
+
+#[derive(Debug, PartialEq, Copy, Clone)]
+enum Categories {
+    NoThunder = 0,
+    Thunderstorms = 2,
+    Marginal = 3,
+    Slight = 4,
+    Enhanced = 5,
+    Moderate = 6,
+    High = 7,
+}
+
+impl Categories {
+    fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::NoThunder),
+            2 => Some(Self::Thunderstorms),
+            3 => Some(Self::Marginal),
+            4 => Some(Self::Slight),
+            5 => Some(Self::Enhanced),
+            6 => Some(Self::Moderate),
+            7 => Some(Self::High),
+            _ => None,
+        }
+    }
+
+    fn to_string(&self) -> String {
+        match self {
+            Self::NoThunder => "none".to_string(),
+            Self::Thunderstorms => "thunderstorms".to_string(),
+            Self::Marginal => "marginal".to_string(),
+            Self::Slight => "slight".to_string(),
+            Self::Enhanced => "enhanced".to_string(),
+            Self::Moderate => "moderate".to_string(),
+            Self::High => "high".to_string(),
+        }
+    }
 }
 
 impl MapServer {
@@ -74,8 +113,10 @@ struct Attributes {
 
 async fn fetch_risk(map_server: MapServer) -> Result<i32, String> {
     let dn = map_server.get_dn();
-    let url = format!("{ARCGIS_BASE_URL}/{dn}/query?f=json&geometry={LONGITUDE},{LATITUDE}&geometryType=esriGeometryPoint\
-         &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*");
+    let url = format!(
+        "{ARCGIS_BASE_URL}/{dn}/query?f=json&geometry={LONGITUDE},{LATITUDE}&geometryType=esriGeometryPoint\
+         &inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*"
+    );
 
     let response: ArcGisResponse = Request::get(&url)
         .send()
@@ -143,7 +184,10 @@ fn GetRisk(MapServerProps { map_server }: &MapServerProps) -> Html {
                             if *r == 0 {
                                 html! { <p1 class={"categorical-none"}>{"NO THUNDER"}</p1> }
                             } else {
-                                let caps = r.to_string().to_uppercase();
+                                let category = Categories::from_i32(*r).unwrap_or(Categories::NoThunder);
+                                let cat_name = category.to_string();
+                                let color = format!("categorical-{cat_name}");
+                                let caps = cat_name.to_uppercase();
                                 html! { <p1 class={color}>{format!("{caps}")}</p1> }
                             }
                         } else {
