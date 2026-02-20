@@ -50,16 +50,18 @@ impl Categories {
             _ => None,
         }
     }
+}
 
-    fn to_string(&self) -> String {
+impl fmt::Display for Categories {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::NoThunder => "none".to_string(),
-            Self::Thunderstorms => "thunderstorms".to_string(),
-            Self::Marginal => "marginal".to_string(),
-            Self::Slight => "slight".to_string(),
-            Self::Enhanced => "enhanced".to_string(),
-            Self::Moderate => "moderate".to_string(),
-            Self::High => "high".to_string(),
+            Self::NoThunder => write!(f, "none"),
+            Self::Thunderstorms => write!(f, "thunderstorms"),
+            Self::Marginal => write!(f, "marginal"),
+            Self::Slight => write!(f, "slight"),
+            Self::Enhanced => write!(f, "enhanced"),
+            Self::Moderate => write!(f, "moderate"),
+            Self::High => write!(f, "high"),
         }
     }
 }
