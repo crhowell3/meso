@@ -1,328 +1,334 @@
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
 
-  color: #ebdbb2;                 /* fg */
-  background-color: #282828;      /* bg */
+    color: #ebdbb2; /* fg */
+    background-color: #282828; /* bg */
 
-  --bg: #282828;                  /* dark0 */
-  --panel: #32302f;               /* dark1 */
-  --border: #3c3836;              /* dark2 */
+    --bg: #282828; /* dark0 */
+    --panel: #32302f; /* dark1 */
+    --border: #3c3836; /* dark2 */
 
-  --text: #ebdbb2;                /* light1 */
-  --muted: #a89984;               /* light4 */
+    --text: #ebdbb2; /* light1 */
+    --muted: #a89984; /* light4 */
 
-  --accent: #83a598;              /* blue */
-  --warning: #fabd2f;             /* yellow */
-  --error: #fb4934;               /* red */
-  --success: #b8bb26;             /* green */
+    --accent: #83a598; /* blue */
+    --warning: #fabd2f; /* yellow */
+    --error: #fb4934; /* red */
+    --success: #b8bb26; /* green */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
 }
 
 .container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+    margin: 0;
+    padding-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: 0.75s;
 }
 
 .row {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+    color: #535bf2;
 }
 
 h1 {
-  text-align: center;
+    text-align: center;
 }
 
 input,
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.2em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: var(--accent);
-  background-color: transparent;
-  transition: border-color 0.25s;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.2em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--accent);
+    background-color: transparent;
+    transition: border-color 0.25s;
 }
 
 button {
-  cursor: pointer;
-  font-size: 12px;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 button:hover {
-  border-color: #83a598;
+    border-color: #83a598;
 }
 button:active {
-  border-color: #83a598;
-  background-color: #ebdbb2;
+    border-color: #83a598;
+    background-color: #ebdbb2;
 }
 
 input,
 button {
-  outline: none;
+    outline: none;
 }
 
 body {
-margin: 0;
-font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-background: var(--bg);
-color: var(--text);
-height: 100vh;
-display: grid;
-grid-template-rows: auto 1fr auto;
+    margin: 0;
+    font-family:
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
-header, footer {
-padding: 0.75rem 1.25rem;
-background: var(--panel);
-border-bottom: 1px solid var(--border);
+header,
+footer {
+    padding: 0.75rem 1.25rem;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
 }
 
 footer {
-border-top: 1px solid var(--border);
-border-bottom: none;
-font-size: 0.85rem;
-color: var(--muted);
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    font-size: 0.85rem;
+    color: var(--muted);
 }
 
 main {
-padding: 1rem;
-display: grid;
-grid-template-columns: 1.2fr 1fr 1fr;
-grid-template-rows: auto 1fr;
-gap: 1rem;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
 }
 
 .panel {
-background: var(--panel);
-border: 1px solid var(--border);
-border-radius: 12px;
-padding: 1rem;
-display: flex;
-flex-direction: column;
-gap: 0.75rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .panel h2 {
-font-size: 1rem;
-margin: 0;
-font-weight: 600;
-color: var(--accent);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+    color: var(--accent);
 }
 
 .status-grid {
-display: block;
-gap: 0.75rem;
+    display: block;
+    gap: 0.75rem;
 }
 
 .status-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
 }
 
 .status-item {
-background: #504945;
-border: 1px solid var(--border);
-border-radius: 8px;
-padding: 0.5rem 0.75rem;
+    background: #504945;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
 }
 
 .status-item span.label {
-display: block;
-font-size: 0.75rem;
-color: var(--muted);
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
 }
 
 .status-item span.value {
-font-size: 0.95rem;
-font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
+    :root {
+        color: #f6f6f6;
+        background-color: #2f2f2f;
+    }
 
-  a:hover {
-    color: #24c8db;
-  }
+    a:hover {
+        color: #24c8db;
+    }
 
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
+    input,
+    button {
+        color: #ffffff;
+        background-color: #0f0f0f98;
+    }
+    button:active {
+        background-color: #0f0f0f69;
+    }
 }
 
 /* SPC Categorical Risk Colors*/
 
 .categorical-none {
-  background-color: #AFDDF6;
-  color: #0f0f0f;
+    background-color: #afddf6;
+    color: #0f0f0f;
 }
 
 .categorical-thunderstorms {
-  background-color: #c0e8c0;
-  color: #0f0f0f;
+    background-color: #c0e8c0;
+    color: #0f0f0f;
 }
 
 .categorical-marginal {
-  background-color: #7fc57f;
-  color: #0f0f0f;
+    background-color: #7fc57f;
+    color: #0f0f0f;
 }
 
 .categorical-slight {
-  background-color: #f6f67f;
-  color: #0f0f0f;
+    background-color: #f6f67f;
+    color: #0f0f0f;
 }
 
 .categorical-enhanced {
-  background-color: #e6c27f;
-  color: #0f0f0f;
+    background-color: #e6c27f;
+    color: #0f0f0f;
 }
 
 .categorical-moderate {
-  background-color: #e67f7f;
-  color: #0f0f0f;
+    background-color: #e67f7f;
+    color: #0f0f0f;
 }
 
 .categorical-high {
-  background-color: #ff7fff;
-  color: #0f0f0f;
+    background-color: #ff7fff;
+    color: #0f0f0f;
 }
 
 /* SPC Tornado Probability Colors*/
 
 .tornado-2 {
-  background-color: #008B00;
-  color: #efefef;
+    background-color: #008b00;
+    color: #efefef;
 }
 
 .tornado-5 {
-  background-color: #8B4726;
-  color: #efefef;
+    background-color: #8b4726;
+    color: #efefef;
 }
 
 .tornado-10 {
-  background-color: #FFC800;
-  color: #0f0f0f;
+    background-color: #ffc800;
+    color: #0f0f0f;
 }
 
 .tornado-15 {
-  background-color: #FF0000;
-  color: #efefef;
+    background-color: #ff0000;
+    color: #efefef;
 }
 
 .tornado-30 {
-  background-color: #FF00FF;
-  color: #efefef;
+    background-color: #ff00ff;
+    color: #efefef;
 }
 
 .tornado-45 {
-  background-color: #912CEE;
-  color: #efefef;
+    background-color: #912cee;
+    color: #efefef;
 }
 
 .tornado-60 {
-  background-color: #104E8B;
-  color: #efefef;
+    background-color: #104e8b;
+    color: #efefef;
 }
 
 /* SPC Wind Probability Colors*/
 
 .wind-5 {
-  background-color: #8B4726;
-  color: #efefef;
+    background-color: #8b4726;
+    color: #efefef;
 }
 
 .wind-15 {
-  background-color: #FFC800;
-  color: #efefef;
+    background-color: #ffc800;
+    color: #efefef;
 }
 
 .wind-30 {
-  background-color: #FF0000;
-  color: #efefef;
+    background-color: #ff0000;
+    color: #efefef;
 }
 
 .wind-45 {
-  background-color: #FF00FF;
-  color: #efefef;
+    background-color: #ff00ff;
+    color: #efefef;
 }
 
 .wind-60 {
-  background-color: #912CEE;
-  color: #efefef;
+    background-color: #912cee;
+    color: #efefef;
 }
 
 /* SPC Hail Probability Colors*/
 
 .hail-5 {
-  background-color: #8B4726;
-  color: #efefef;
+    background-color: #8b4726;
+    color: #efefef;
 }
 
 .hail-15 {
-  background-color: #FFC800;
-  color: #efefef;
+    background-color: #ffc800;
+    color: #efefef;
 }
 
 .hail-30 {
-  background-color: #FF0000;
-  color: #efefef;
+    background-color: #ff0000;
+    color: #efefef;
 }
 
 .hail-45 {
-  background-color: #FF00FF;
-  color: #efefef;
+    background-color: #ff00ff;
+    color: #efefef;
 }
 
 .hail-60 {
-  background-color: #912CEE;
-  color: #efefef;
+    background-color: #912cee;
+    color: #efefef;
 }
 
 /* Miscellaneous */
 
 .attribution {
-  font-size: 8px;
-  color: #bfbfbf;
-  font-style: italic;
-  text-align: right;
+    font-size: 8px;
+    color: #bfbfbf;
+    font-style: italic;
+    text-align: right;
 }
