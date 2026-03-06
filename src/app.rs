@@ -20,10 +20,10 @@ const LONGITUDE: f64 = -86.6018;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 enum MapServer {
-    Day1Outlook = 1,
-    Day1Tornado = 3,
-    Day1Hail = 5,
-    Day1Wind = 7,
+    Outlook = 1,
+    Tornado = 3,
+    Hail = 5,
+    Wind = 7,
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -67,28 +67,28 @@ impl fmt::Display for Categories {
 }
 
 impl MapServer {
-    fn get_common_name(&self) -> String {
+    fn get_common_name(self) -> String {
         match self {
-            Self::Day1Outlook => "categorical".to_string(),
-            Self::Day1Tornado => "tornado".to_string(),
-            Self::Day1Hail => "hail".to_string(),
-            Self::Day1Wind => "wind".to_string(),
+            Self::Outlook => "categorical".to_string(),
+            Self::Tornado => "tornado".to_string(),
+            Self::Hail => "hail".to_string(),
+            Self::Wind => "wind".to_string(),
         }
     }
 
-    fn get_dn(&self) -> i32 {
+    fn get_dn(self) -> i32 {
         match self {
-            Self::Day1Outlook => 1,
-            Self::Day1Tornado => 3,
-            Self::Day1Hail => 5,
-            Self::Day1Wind => 7,
+            Self::Outlook => 1,
+            Self::Tornado => 3,
+            Self::Hail => 5,
+            Self::Wind => 7,
         }
     }
 }
 
 impl fmt::Display for MapServer {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
@@ -160,10 +160,10 @@ fn Climate() -> Html {
 #[component]
 fn GetRisk(MapServerProps { map_server }: &MapServerProps) -> Html {
     let risk = use_state(|| None::<i32>);
-    let ms = map_server.clone();
+    let ms = *map_server;
     {
         let risk = risk.clone();
-        use_effect_with((), move |_| {
+        use_effect_with((), move |()| {
             wasm_bindgen_futures::spawn_local(async move {
                 let result = fetch_risk(ms).await;
                 if let Ok(r) = result {
@@ -210,7 +210,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn new() -> Self {
-        let outlook_url = "https://www.spc.noaa.gov/products/outlook/day1otlk.gif";
+        let outlook_url = "https://www.spc.noaa.gov/products/outlook/day1otlk.png";
         Self {
             outlook_url: outlook_url.to_string(),
         }
@@ -231,10 +231,10 @@ pub fn OutlookButtons() -> Html {
 
     html! {
         <>
-            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1otlk.gif")}>{"Categorical"}</button>
-            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_torn.gif")}>{"Tornado"}</button>
-            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_wind.gif")}>{"Wind"}</button>
-            <button style="width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_hail.gif")}>{"Hail"}</button>
+            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1otlk.png")}>{"Categorical"}</button>
+            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_torn.png")}>{"Tornado"}</button>
+            <button style="margin-right: 16px; width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_wind.png")}>{"Wind"}</button>
+            <button style="width: 100px;" onmouseenter={change_outlook("https://www.spc.noaa.gov/products/outlook/day1probotlk_hail.png")}>{"Hail"}</button>
         </>
     }
 }
@@ -261,21 +261,21 @@ pub fn App() -> Html {
                     <div class="status-row">
                         <section class="panel" style="width: 675px;">
                             <h2>{"Day 1 Categorical Outlook"}</h2>
-                            <GetRisk map_server={MapServer::Day1Outlook} />
+                            <GetRisk map_server={MapServer::Outlook} />
                             <h2>{"Risks by Type"}</h2>
                             <div class="status-grid">
                                 <div class="status-row">
                                     <div class="status-item" style="width: 150px;">
                                         <span class="label">{"Tornado"}</span>
-                                        <span class="value"><GetRisk map_server={MapServer::Day1Tornado} /></span>
+                                        <span class="value"><GetRisk map_server={MapServer::Tornado} /></span>
                                     </div>
                                     <div class="status-item" style="width: 150px;">
                                         <span class="label">{"Wind"}</span>
-                                        <span class="value"><GetRisk map_server={MapServer::Day1Wind} /></span>
+                                        <span class="value"><GetRisk map_server={MapServer::Wind} /></span>
                                     </div>
                                     <div class="status-item" style="width: 150px;">
                                         <span class="label">{"Hail"}</span>
-                                        <span class="value"><GetRisk map_server={MapServer::Day1Hail} /></span>
+                                        <span class="value"><GetRisk map_server={MapServer::Hail} /></span>
                                     </div>
                                 </div>
                             </div>
