@@ -296,7 +296,7 @@ pub fn App() -> Html {
                     </section>
                 </main>
                 <footer class="attribution">
-                    {"created by crhowell3 | v0.1.0"}
+                    {"created by crhowell3 | v0.1.1"}
                 </footer>
             </body>
         </ContextProvider<UseStateHandle<AppState>>>
